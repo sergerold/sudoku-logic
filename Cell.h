@@ -16,8 +16,8 @@ class Cell
 
 		void setValue(int);
 		void resetCandidates (std::vector <int>);
-
 		bool removeCandidate (int);
+		bool candidateExists (int);
 
 		void valueFound (int);
 		

@@ -41,6 +41,16 @@ bool Cell::removeCandidate (int val_to_remove)
 
 }
 
+bool Cell::candidateExists (int possible_candidate)
+{
+	for (int it =0; it <candidates.size();it++)
+		if (candidates[it] == possible_candidate)
+			return true;
+
+	return false;
+
+}
+
 void Cell::valueFound (int val)
 {
 	setValue (val);

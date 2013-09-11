@@ -1,7 +1,7 @@
 #include "sudoku_methods.h"
 #define UNASSIGNED 0
 
-
+#include <iostream>
 
 //HIDDEN SINGLE
 
@@ -15,7 +15,8 @@ bool hidden_single (Cell cell_arr [9][9])
 		{
 			if (!cell_arr [row][col].getValue() == UNASSIGNED)
 				continue;
-
+			
+			//as only single candidate then must be hidden single --> set this as value
 			if (cell_arr[row][col].getCandidates().size() == 1)
 			{
 				cell_arr[row][col].valueFound (cell_arr[row][col].getCandidates()[0]);
@@ -37,7 +38,126 @@ bool hidden_single (Cell cell_arr [9][9])
 
 bool naked_single (Cell cell_arr [9][9])
 {
+	bool progressed = false;
 	
+	//row check
+	
+	int unique_row, unique_col;	
+
+	for (int possible_candidate =1; possible_candidate < 10; possible_candidate++)
+	{
+		for (int row = 0; row < 9; row++)
+		{
+			int count =0;		
+			
+			for (int col = 0; col < 9; col++)
+			{
+				if (count >1)
+					break;				
+
+				if (cell_arr[row][col].candidateExists (possible_candidate))
+				{
+					count++;
+					unique_row = row, unique_col = col;
+				}
+			}
+			//naked single found
+			if (count ==1)
+			{
+				cell_arr[unique_row][unique_col].valueFound (possible_candidate);
+				regenerateCandidates(cell_arr,unique_row,unique_col);
+				progressed = true;
+				
+			}
+
+		}
+
+	}
+
+	//col check
+
+	for (int possible_candidate =1; possible_candidate < 10; possible_candidate++)
+	{
+		for (int col = 0; col < 9; col++)
+		{
+			int count =0;		
+			
+			for (int row = 0; row < 9; row++)
+			{
+				if (count >1)
+					break;				
+
+				if (cell_arr[row][col].candidateExists (possible_candidate))
+				{
+					count++;
+					unique_row = row, unique_col = col;
+				}
+			}
+			//naked single found
+			if (count ==1)
+			{
+				cell_arr[unique_row][unique_col].valueFound (possible_candidate);
+				regenerateCandidates(cell_arr,unique_row,unique_col);
+				progressed = true;
+				
+			}
+
+		}
+
+	}
+	
+	//mini-box
+
+	for (int possible_candidate =1; possible_candidate < 10; possible_candidate++)
+	{
+
+		for (int row=0; row< 9;row= row +3)
+    		{
+
+       		 for (int col = 0 ; col <9;col = col+3)
+       		 {
+				//mini-box
+				int count = 0;
+
+          	 		 for (int i_row =row ; i_row < (row+3);i_row++)
+          			  {
+            	  			  for (int i_col = col;i_col < (col+3);i_col++)
+             	  			 {
+					
+
+						if (count >1)
+							break;				
+
+						if (cell_arr[row][col].candidateExists (possible_candidate))
+						{
+							count++;
+							unique_row = row, unique_col = col;
+						}
+
+			
+                 			 }
+
+           		 	 }
+
+				//naked single found
+				if (count == 1)
+				{
+					cell_arr[unique_row][unique_col].valueFound (possible_candidate);
+					regenerateCandidates(cell_arr,unique_row,unique_col);
+					progressed = true;
+					
+				}
+
+            		}
+      		}
+  
+	}
+
+	
+
+
+	return progressed;
+		
 
 }
 

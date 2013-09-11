@@ -2,6 +2,7 @@
 #include "sudoku_methods.h"
 
 #include <iostream>
+#include <ctime>
 #define UNASSIGNED 0
 
 Puzzle::Puzzle (int lin_arr[81])
@@ -49,7 +50,12 @@ void Puzzle::solve()
 	generateCandidates(cell_arr);
 
 	//solve methods
-	hidden_single (cell_arr);
+
+	//hidden_single (cell_arr);
+
+	naked_single (cell_arr);
+
+
 	//eliminate candidates methods
 
 	
