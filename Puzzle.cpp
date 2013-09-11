@@ -41,6 +41,7 @@ Puzzle::Puzzle (int multi_arr [9][9])
 }
 
 
+//SOLVE
 
 void Puzzle::solve()
 {
@@ -48,10 +49,36 @@ void Puzzle::solve()
 	generateCandidates(cell_arr);
 
 	//solve methods
-
+	hidden_single (cell_arr);
 	//eliminate candidates methods
 
 	
 }
 
+
+
+//PRINT
+
+void Puzzle:: print ()
+{
+	for (int row =0; row <9;row++)
+	{
+		for (int col =0 ;col <9;col++)
+		{
+			if (col == 3 || col == 6)
+				std::cout << " ";
+			
+			std::cout << cell_arr[row][col].getValue();
+
+		}
+		std::cout <<std::endl;
+		
+		if (row == 2 || row == 5)
+			std::cout << std::endl;
+
+	
+
+	}
+
+}
 

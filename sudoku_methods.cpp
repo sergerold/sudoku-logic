@@ -6,13 +6,40 @@
 //HIDDEN SINGLE
 
 
+bool hidden_single (Cell cell_arr [9][9])
+{
+	bool progressed = false;
+	for (int row=0; row<9; row++)
+	{
+		for (int col=0;col <9;col++)
+		{
+			if (!cell_arr [row][col].getValue() == UNASSIGNED)
+				continue;
+
+			if (cell_arr[row][col].getCandidates().size() == 1)
+			{
+				cell_arr[row][col].valueFound (cell_arr[row][col].getCandidates()[0]);
+				regenerateCandidates (cell_arr,row,col);
+				row = 0, col =-1;
+				progressed =true;
+
+			}
+		
+		}
+
+	}
+	return progressed;
+}
 
 
 
+//NAKED SINGLE
 
+bool naked_single (Cell cell_arr [9][9])
+{
+	
 
-
-
+}
 
 
 

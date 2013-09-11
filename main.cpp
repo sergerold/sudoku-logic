@@ -20,5 +20,6 @@ int main ()
 	
 	Puzzle p (arr);
 	p.solve();
+	p.print();
 
 }

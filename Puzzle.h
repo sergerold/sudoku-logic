@@ -16,6 +16,8 @@ class Puzzle
 	Puzzle (int [9][9]);
 	void solve();
 
+	void print ();
+
 
 
 };
