@@ -8,9 +8,6 @@ class Puzzle
 
 	bool solved;
 	Cell cell_arr[9][9];
-	bool isValidPlacement (Cell [][9],int row, int col, int val);
-	void generateCandidates (Cell [][9]);
-	void regenerateCandidates(Cell [][9], int row, int col);
 
 
 	public:
