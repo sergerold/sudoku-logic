@@ -52,9 +52,11 @@ void Puzzle::solve()
 	//solve methods
 
 	//hidden_single (cell_arr);
-
-	naked_single (cell_arr);
-
+	//naked_single (cell_arr);
+	clock_t stime = clock();
+	
+	disjoint_subsets(cell_arr);
+	std::cout << ((double) clock() - stime) /CLOCKS_PER_SEC<<std::endl;
 
 	//eliminate candidates methods
 

@@ -32,6 +32,13 @@ bool hidden_single (Cell cell_arr [9][9])
 	return progressed;
 }
 
+struct box_identity
+{
+std::vector <int> candidates_to_remove;
+std::vector <int> candidates_to_remain_pos_x;
+std::vector <int> candidates_to_remain_pos_y;
+						
+};
 
 
 //NAKED SINGLE
@@ -40,6 +47,7 @@ bool naked_single (Cell cell_arr [9][9])
 {
 	bool progressed = false;
 	
+
 	//row check
 	
 	int unique_row, unique_col;	
@@ -163,7 +171,258 @@ bool naked_single (Cell cell_arr [9][9])
 
 
 
+//DISJOINT SUBSETS
 
+bool disjoint_subsets (Cell cell_arr [9][9])
+{
+
+
+
+
+
+
+	bool progressed = false;
+
+	for (int row =0; row < 9;row ++)
+	{
+		for (int base = 0; base <9;base ++)
+		{	
+			
+			std::vector <int> candidates_to_remove;
+			std::vector <int> candidates_to_remain_pos;
+			bool identical_candidates = false;
+
+			candidates_to_remain_pos.push_back(base);
+
+			if (!cell_arr [row][base].getValue() == UNASSIGNED)
+				continue;
+	
+			for (int compare = 0; compare <9;compare++)
+			{
+				if (base == compare)
+					continue;
+
+				if (!cell_arr [row][compare].getValue() == UNASSIGNED)
+					continue;
+
+
+				
+				
+				//identical pairs etc
+				if (cell_arr [row][base].getCandidates() == cell_arr[row][compare].getCandidates())
+				{
+					candidates_to_remove = cell_arr [row][base].getCandidates();
+					candidates_to_remain_pos.push_back(compare);
+					identical_candidates = true;
+				
+					
+
+				}
+			
+
+			}
+			
+			//check that identical pairs/triplets found (number of identical candidates must == number of cells)
+			if (identical_candidates &&  candidates_to_remove.size() == candidates_to_remain_pos.size())
+			{
+				for (int remove_pos=0; remove_pos< 9; remove_pos++)
+				{	
+					bool skip =false;
+					//do not remove if one of identical pairs
+					for (int it=0;it < candidates_to_remain_pos.size();it++)
+						if (candidates_to_remain_pos[it] == remove_pos)
+							skip =true;
+
+					if (skip)
+						continue;
+	
+					//remove candidates from other cells
+					cell_arr[row][remove_pos].removeCandidates(candidates_to_remove);
+					
+					progressed =true;
+					
+				}
+	
+
+			}
+
+			
+
+		}
+
+	}
+
+	//col check
+
+	for (int col =0; col < 9;col ++)
+	{
+		for (int base = 0; base <9;base ++)
+		{	
+			
+			std::vector <int> candidates_to_remove;
+			std::vector <int> candidates_to_remain_pos;
+			bool identical_candidates = false;
+
+			candidates_to_remain_pos.push_back(base);
+
+			if (!cell_arr [base][col].getValue() == UNASSIGNED)
+				continue;
+	
+			for (int compare = 0; compare <9;compare++)
+			{
+				if (base == compare)
+					continue;
+
+				if (!cell_arr [compare][col].getValue() == UNASSIGNED)
+					continue;
+
+
+				
+				
+				//identical pairs etc
+				if (cell_arr [base][col].getCandidates() == cell_arr[compare][col].getCandidates())
+				{
+					candidates_to_remove = cell_arr [base][col].getCandidates();
+					candidates_to_remain_pos.push_back(compare);
+					identical_candidates = true;
+
+				}
+			
+
+			}
+
+			if (identical_candidates && candidates_to_remove.size() == candidates_to_remain_pos.size())
+			{
+				
+				for (int remove_pos=0; remove_pos< 9; remove_pos++)
+				{	
+					bool skip =false;
+					//do not remove if one of identical pairs
+					for (int it=0;it < candidates_to_remain_pos.size();it++)
+						if (candidates_to_remain_pos[it] == remove_pos)
+							skip =true;
+
+					if (skip)
+						continue;
+	
+					//remove candidates from other cells
+					cell_arr[remove_pos][col].removeCandidates(candidates_to_remove);
+					
+
+					progressed =true;
+				}
+	
+
+			}
+
+			
+
+		}
+
+	}
+
+	
+	
+	//mini-box check
+
+	for (int row=0; row< 9;row= row +3)
+   	 {
+        	for (int col = 0 ; col <9;col = col+3)
+        	{
+
+          		for (int i_row =row ; i_row < (row+3);i_row++)
+            		{
+              	  	for (int i_col = col;i_col < (col+3);i_col++)
+               		{
+					
+
+					bool identical_candidates = false;
+					box_identity currentbox;
+					
+					
+					currentbox.candidates_to_remain_pos_x.push_back(i_row);
+					currentbox.candidates_to_remain_pos_y.push_back(i_col);
+
+					if (!cell_arr [i_row][i_col].getValue() == UNASSIGNED)
+						continue;
+
+
+					for (int i_row_compare = row; i_row_compare < (row+3);i_row_compare++)
+					{
+						for (int i_col_compare = col; i_col_compare < (col+3);i_col_compare++)
+						{
+							if (!cell_arr [i_row_compare][i_col_compare].getValue() == UNASSIGNED)
+								continue;
+
+							if (i_row == i_row_compare && i_col == i_col_compare)
+								continue;
+
+							if (cell_arr [i_row][i_col].getCandidates() == cell_arr[i_row_compare][i_col_compare].getCandidates())
+							{
+								currentbox.candidates_to_remove = cell_arr [i_row][i_col].getCandidates();
+								currentbox.candidates_to_remain_pos_x.push_back(i_row_compare);
+								currentbox.candidates_to_remain_pos_y.push_back(i_col_compare);
+								identical_candidates = true;
+								
+
+							}
+
+
+
+						}
+		
+
+					}
+
+					if (identical_candidates && currentbox.candidates_to_remove.size() == currentbox.candidates_to_remain_pos_x.size())
+					{
+						
+						for (int i_row =row ; i_row < (row+3);i_row++)
+						{
+							for (int i_col = col;i_col < (col+3);i_col++)
+							{
+								bool skip =false;
+
+								//do not remove if one of identical pairs
+								for (int it=0;it < currentbox.candidates_to_remain_pos_x.size();it++)
+									if (currentbox.candidates_to_remain_pos_x[it] == i_row && currentbox.candidates_to_remain_pos_y[it] == i_col )
+										skip =true;
+
+	
+								if (skip)
+									continue;
+	
+								//remove candidates from other cells
+								cell_arr[i_row][i_col].removeCandidates(currentbox.candidates_to_remove);
+					
+
+								progressed =true;
+
+
+
+							}
+
+						}
+	
+
+					}
+	
+
+
+					
+
+
+               	 	}
+
+            		}
+
+
+              }
+
+    	}
+	
+
+}
 
 
 

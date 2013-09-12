@@ -25,16 +25,19 @@ void Cell::resetCandidates (std::vector <int> new_candidates)
 
 }
 
-bool Cell::removeCandidate (int val_to_remove)
+bool Cell::removeCandidates (std::vector <int> candidates_to_remove)
 {
+	bool removed =false;
 	for (int it=0;it < candidates.size();it++)
 	{
-		if (candidates [it] == val_to_remove)
-			{
-				candidates.erase( candidates.begin() + it);
-				return true;
-			}		
-
+		for (int a=0; a <candidates_to_remove.size();a++)
+		{
+			if (candidates [it] == candidates_to_remove [a])
+				{
+					candidates.erase( candidates.begin() + it);
+					removed = true;
+				}		
+		}
 	}
 	
 	return false;
